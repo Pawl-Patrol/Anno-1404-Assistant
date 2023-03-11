@@ -1,10 +1,10 @@
-import beggarsUrl from "./assets/Beggar.png";
-import citizensUrl from "./assets/Citizen.png";
-import envoysUrl from "./assets/Envoys.png";
-import noblemenUrl from "./assets/Noblemen.png";
-import nomadsUrl from "./assets/Nomads.png";
-import patriciansUrl from "./assets/Patrician.png";
-import peasantsUrl from "./assets/Peasant.png";
+import beggarsUrl from "./assets/icons/Beggar.png";
+import citizensUrl from "./assets/icons/Citizen.png";
+import envoysUrl from "./assets/icons/Envoys.png";
+import noblemenUrl from "./assets/icons/Noblemen.png";
+import nomadsUrl from "./assets/icons/Nomads.png";
+import patriciansUrl from "./assets/icons/Patrician.png";
+import peasantsUrl from "./assets/icons/Peasant.png";
 
 export const population = {
   Beggars: beggarsUrl,
