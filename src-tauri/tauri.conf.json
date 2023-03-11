@@ -40,8 +40,8 @@
       {
         "resizable": true,
         "title": "Anno 1404 Calculator",
-        "width": 500,
-        "height": 355
+        "minWidth": 500,
+        "minHeight": 355
       }
     ]
   }

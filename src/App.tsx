@@ -241,6 +241,7 @@ function ImageGallery(props: { images: string[] }) {
         justifyContent="center"
         alignItems="center"
         minHeight="0"
+        flexGrow="1"
       >
         <img
           src={props.images[step]}
