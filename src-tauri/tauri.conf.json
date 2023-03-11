@@ -38,7 +38,7 @@
     },
     "windows": [
       {
-        "resizable": false,
+        "resizable": true,
         "title": "Anno 1404 Calculator",
         "width": 500,
         "height": 355

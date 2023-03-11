@@ -1,3 +1,4 @@
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import {
   Alert,
@@ -11,6 +12,7 @@ import {
   FormControlLabel,
   Grid,
   InputLabel,
+  MobileStepper,
   Select,
   Snackbar,
   Stack,
@@ -30,6 +32,7 @@ import {
 } from "./lib/calculation";
 import { gameVersions, PointerPath } from "./lib/game-versions";
 import { Item, items } from "./lib/items";
+import { layoutNames, layoutsMapping } from "./lib/layouts";
 import { population } from "./lib/population";
 import { populationOffsets } from "./lib/population-offsets";
 import { Process } from "./lib/process";
@@ -89,6 +92,7 @@ function App() {
   // tabs
   const statisticsTab = useId();
   const settingsTab = useId();
+  const layoutsTab = useId();
   const [tab, setTab] = useState(settingsTab);
 
   useEffect(() => {
@@ -136,7 +140,7 @@ function App() {
   }
 
   return (
-    <>
+    <Stack direction="column" height="100vh">
       <Dialog open={!!selectedItem} onClose={closeModal}>
         <DialogContent>
           {selectedItem && (
@@ -159,25 +163,118 @@ function App() {
           <TabList variant="fullWidth" onChange={(_, v) => setTab(v)}>
             <Tab label="Statistics" value={statisticsTab} />
             <Tab label="Settings" value={settingsTab} />
+            <Tab label="Layouts" value={layoutsTab} />
           </TabList>
         </Box>
-        <Box>
-          <TabPanel value={statisticsTab}>
-            <PopulationView populationState={populationState} />
-            <ConsumptionView
-              consumptionState={consumption}
-              onItemClick={setSelectedItem}
-            />
-          </TabPanel>
-          <TabPanel value={settingsTab}>
-            <PopulationForm
-              onSubmit={setPopulation}
-              formState={formState}
-              setFormState={setFormState}
-            />
-          </TabPanel>
-        </Box>
+        <TabPanel value={statisticsTab}>
+          <PopulationView populationState={populationState} />
+          <ConsumptionView
+            consumptionState={consumption}
+            onItemClick={setSelectedItem}
+          />
+        </TabPanel>
+        <TabPanel value={settingsTab}>
+          <PopulationForm
+            onSubmit={setPopulation}
+            formState={formState}
+            setFormState={setFormState}
+          />
+        </TabPanel>
+        <TabPanel
+          value={layoutsTab}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            padding: 0,
+            flex: 1,
+            minHeight: 0,
+          }}
+        >
+          <LayoutsView />
+        </TabPanel>
       </TabContext>
+    </Stack>
+  );
+}
+
+function LayoutsView() {
+  const [tab, setTab] = useState(layoutNames[0]);
+  return (
+    <TabContext value={tab}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <TabList
+          variant="scrollable"
+          scrollButtons
+          allowScrollButtonsMobile
+          onChange={(_, v) => setTab(v)}
+        >
+          {layoutNames.map((name) => (
+            <Tab label={name} value={name} />
+          ))}
+        </TabList>
+      </Box>
+      {typesafeEntries(layoutsMapping).map(([name, images]) => (
+        <TabPanel
+          key={name}
+          value={name}
+          sx={{
+            padding: 0,
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: tab === name ? 1 : 0,
+            minHeight: 0,
+          }}
+        >
+          <ImageGallery images={images} />
+        </TabPanel>
+      ))}
+    </TabContext>
+  );
+}
+
+function ImageGallery(props: { images: string[] }) {
+  const [step, setStep] = useState(0);
+  return (
+    <>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="0"
+      >
+        <img
+          src={props.images[step]}
+          alt="layout"
+          style={{
+            maxHeight: "100%",
+            maxWidth: "100%",
+            objectFit: "contain",
+          }}
+        />
+      </Box>
+      <MobileStepper
+        variant="dots"
+        steps={props.images.length}
+        sx={{
+          position: "unset",
+        }}
+        nextButton={
+          <Button
+            onClick={() => setStep((x) => x + 1)}
+            disabled={step === props.images.length - 1}
+          >
+            right
+            <KeyboardArrowRight />
+          </Button>
+        }
+        backButton={
+          <Button onClick={() => setStep((x) => x - 1)} disabled={step === 0}>
+            <KeyboardArrowLeft />
+            left
+          </Button>
+        }
+        activeStep={step}
+      />
     </>
   );
 }
