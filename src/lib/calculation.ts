@@ -31,5 +31,10 @@ export function calculateConsumption(population: PopulationState) {
     }
   }
 
+  // the only exception
+  if (population.Noblemen < 3000) {
+    result["Candlesticks"] = 0;
+  }
+
   return result;
 }
