@@ -8,13 +8,13 @@ export type ConsumptionState = Record<Item, number>;
 
 export function getEmptyPopulationState() {
   return {
-    Beggars: 0,
-    Citizens: 0,
-    Envoys: 0,
-    Noblemen: 0,
-    Nomads: 0,
-    Patricians: 0,
-    Peasants: 0,
+    [Population.Beggars]: 0,
+    [Population.Citizens]: 0,
+    [Population.Peasants]: 0,
+    [Population.Patricians]: 0,
+    [Population.Noblemen]: 0,
+    [Population.Nomads]: 0,
+    [Population.Envoys]: 0,
   } satisfies PopulationState;
 }
 
@@ -22,6 +22,7 @@ export function calculateConsumption(population: PopulationState) {
   const result: ConsumptionState = {} as any;
 
   for (const [populationKey, populationValue] of typesafeEntries(consumption)) {
+    console.log(typeof populationKey, population, population[populationKey]);
     const populationTotal = population[populationKey];
 
     for (const [itemKey, itemValue] of typesafeEntries(populationValue)) {
@@ -32,7 +33,7 @@ export function calculateConsumption(population: PopulationState) {
   }
 
   // the only exception
-  if (population.Noblemen < 3000) {
+  if (population[Population.Noblemen] < 3000) {
     result["Candlesticks"] = 0;
   }
 

@@ -7,21 +7,21 @@ type ItemConsumption = {
 };
 
 export const consumption = {
-  Beggars: {
+  [Population.Beggars]: {
     Fish: { amount: 285, depends: 1 },
     Cider: { amount: 500, depends: 1 },
   },
-  Peasants: {
+  [Population.Peasants]: {
     Fish: { amount: 200, depends: 1 },
     Cider: { amount: 340, depends: 60 },
   },
-  Citizens: {
+  [Population.Citizens]: {
     Fish: { amount: 500, depends: 1 },
     Cider: { amount: 340, depends: 1 },
     LinenGarments: { amount: 476, depends: 1 },
     Spices: { amount: 500, depends: 1 },
   },
-  Patricians: {
+  [Population.Patricians]: {
     Fish: { amount: 909, depends: 1 },
     Spices: { amount: 909, depends: 1 },
     Bread: { amount: 727, depends: 1 },
@@ -32,7 +32,7 @@ export const consumption = {
     Books: { amount: 1875, depends: 940 },
     Candlesticks: { amount: 2500, depends: 0 }, // handles separately
   },
-  Noblemen: {
+  [Population.Noblemen]: {
     Fish: { amount: 1250, depends: 1 },
     Spices: { amount: 1250, depends: 1 },
     Bread: { amount: 1025, depends: 1 },
@@ -48,12 +48,12 @@ export const consumption = {
     Books: { amount: 3333, depends: 1 },
     Candlesticks: { amount: 3333, depends: 3000 },
   },
-  Nomads: {
+  [Population.Nomads]: {
     Dates: { amount: 450, depends: 1 },
     Milk: { amount: 436, depends: 145 },
     Carpets: { amount: 909, depends: 295 },
   },
-  Envoys: {
+  [Population.Envoys]: {
     Dates: { amount: 600, depends: 1 },
     Milk: { amount: 666, depends: 1 },
     Carpets: { amount: 1500, depends: 1 },

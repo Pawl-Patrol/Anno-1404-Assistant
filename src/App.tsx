@@ -30,11 +30,10 @@ import {
   getEmptyPopulationState,
   PopulationState,
 } from "./lib/calculation";
-import { gameVersions, PointerPath } from "./lib/game-versions";
+import { GameVersion, gameVersions } from "./lib/game-versions";
 import { Item, items } from "./lib/items";
 import { layoutNames, layoutsMapping } from "./lib/layouts";
 import { population } from "./lib/population";
-import { populationOffsets } from "./lib/population-offsets";
 import { Process } from "./lib/process";
 import { production } from "./lib/production";
 import { typesafeEntries } from "./lib/util";
@@ -46,10 +45,10 @@ type FormState = {
   updateInterval?: number;
 };
 
-async function readPopulation(process: Process, pointerPath: PointerPath) {
-  const address = await process.traversePointerPath(pointerPath);
+async function readPopulation(process: Process, gameVersion: GameVersion) {
+  const address = await process.traversePointerPath(gameVersion.pointerPath);
   const result: PopulationState = {} as any;
-  for (const [name, offset] of typesafeEntries(populationOffsets)) {
+  for (const [name, offset] of typesafeEntries(gameVersion.populationOffsets)) {
     const value = await process.readInteger(address + offset, 4);
     result[name] = Number(value);
   }
@@ -131,7 +130,7 @@ function App() {
     try {
       const population = await readPopulation(
         formState.process,
-        gameVersions[formState.gameVersionIndex].pointerPath
+        gameVersions[formState.gameVersionIndex]
       );
       setPopulation(population);
     } catch (error) {
@@ -362,7 +361,7 @@ function PopulationView(props: { populationState: PopulationState }) {
   return <RowView data={populationEntries} />;
 }
 
-function RowView<T extends string>(props: {
+function RowView<T>(props: {
   data: {
     name: T;
     value: number;
@@ -379,7 +378,7 @@ function RowView<T extends string>(props: {
   );
 }
 
-function ItemView<T extends string>(props: {
+function ItemView<T>(props: {
   name: T;
   value: number;
   image: string;
