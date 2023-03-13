@@ -22,7 +22,7 @@ import {
 } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { invoke } from "@tauri-apps/api";
-import { useEffect, useId, useMemo, useState } from "react";
+import React, { useEffect, useId, useMemo, useState } from "react";
 import { Building, buildings } from "./lib/buildings";
 import {
   calculateConsumption,
@@ -32,7 +32,7 @@ import {
 } from "./lib/calculation";
 import { GameVersion, gameVersions } from "./lib/game-versions";
 import { Item, items } from "./lib/items";
-import { layoutNames, layoutsMapping } from "./lib/layouts";
+import { Layouts, readLayouts } from "./lib/layouts";
 import { population } from "./lib/population";
 import { Process } from "./lib/process";
 import { production } from "./lib/production";
@@ -184,55 +184,122 @@ function App() {
           sx={{
             display: "flex",
             flexDirection: "column",
-            padding: 0,
             flex: 1,
+            padding: 0,
             minHeight: 0,
           }}
         >
-          <LayoutsView />
+          <LayoutsView2 />
         </TabPanel>
       </TabContext>
     </Stack>
   );
 }
 
-function LayoutsView() {
-  const [tab, setTab] = useState(layoutNames[0]);
+function LayoutsView2() {
+  const [layouts, setLayouts] = useState<Layouts>();
+  const [images, setImages] = useState<string[]>([]);
+
+  useMemo(() => {
+    readLayouts().then((result) => setLayouts(result));
+  }, []);
+
   return (
-    <TabContext value={tab}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <TabList
-          variant="scrollable"
-          scrollButtons
-          allowScrollButtonsMobile
-          onChange={(_, v) => setTab(v)}
+    <>
+      <Stack direction="row" gap="1rem" padding="1rem">
+        {layouts && (
+          <RecursiveSelect
+            label="Category"
+            layout={layouts}
+            onSelect={(value) => setImages(value)}
+          />
+        )}
+      </Stack>
+      <ImageGallery images={images} />
+    </>
+  );
+}
+
+function RecursiveSelect(props: {
+  label: string;
+  layout: Layouts;
+  onSelect: (value: string[]) => void;
+}) {
+  if (!props.layout) return null;
+
+  if (Object.values(props.layout)[0] instanceof Array) {
+    return (
+      <ExtendedSelect
+        label={props.label}
+        items={props.layout}
+        onSelect={(_, value) => props.onSelect(value as string[])}
+      />
+    );
+  } else {
+    return (
+      <ExtendedSelect
+        label={props.label}
+        items={props.layout as Exclude<Layouts, string[]>}
+      >
+        {(categoryName, _) => (
+          <RecursiveSelect
+            label={categoryName as string}
+            layout={props.layout[categoryName] as Layouts}
+            onSelect={props.onSelect}
+          />
+        )}
+      </ExtendedSelect>
+    );
+  }
+}
+
+function ExtendedSelect<T extends Record<string, unknown>>(props: {
+  label: string;
+  items: T;
+  children?: (item: keyof T, value: T[keyof T]) => React.ReactNode;
+  onSelect?: (item: keyof T, value: T[keyof T]) => void;
+}) {
+  const entries = useMemo(() => typesafeEntries(props.items), [props.items]);
+  const [value, setValue] = useState<keyof T>(entries[0][0]);
+  const labelId = useId();
+
+  useEffect(() => {
+    setValue(entries[0][0]);
+  }, [entries]);
+
+  useEffect(() => {
+    props.onSelect?.(value, props.items[value]);
+  }, [value]);
+
+  return (
+    <>
+      <FormControl sx={{ flexGrow: 1 }}>
+        <InputLabel id={labelId}>{props.label}</InputLabel>
+        <Select
+          labelId={labelId}
+          label={props.label}
+          value={value}
+          onChange={(e) => setValue(e.target.value as keyof T)}
         >
-          {layoutNames.map((name) => (
-            <Tab label={name} value={name} />
+          {entries.map(([name, _]) => (
+            <MenuItem key={name} value={name}>
+              {name}
+            </MenuItem>
           ))}
-        </TabList>
-      </Box>
-      {typesafeEntries(layoutsMapping).map(([name, images]) => (
-        <TabPanel
-          key={name}
-          value={name}
-          sx={{
-            padding: 0,
-            display: "flex",
-            flexDirection: "column",
-            flexGrow: tab === name ? 1 : 0,
-            minHeight: 0,
-          }}
-        >
-          <ImageGallery images={images} />
-        </TabPanel>
-      ))}
-    </TabContext>
+        </Select>
+      </FormControl>
+      {props.children && props.children(value, props.items[value])}
+    </>
   );
 }
 
 function ImageGallery(props: { images: string[] }) {
   const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    setStep(0);
+  }, [props.images]);
+
   return (
     <>
       <Box

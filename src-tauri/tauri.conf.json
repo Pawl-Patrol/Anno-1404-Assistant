@@ -16,9 +16,26 @@
       "shell": {
         "all": false,
         "open": true
+      },
+      "path": {
+        "all": true
+      },
+      "fs": {
+        "all": true,
+        "scope": [
+          "$RESOURCE/**/*"
+        ]
+      },
+      "protocol": {
+        "asset": true,
+        "assetScope": [
+          "$RESOURCE/**/*"
+        ]
       }
     },
+  
     "bundle": {
+      "resources": ["data/*"],
       "active": true,
       "icon": [
         "icons/32x32.png",

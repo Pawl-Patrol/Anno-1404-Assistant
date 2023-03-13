@@ -22,7 +22,6 @@ export function calculateConsumption(population: PopulationState) {
   const result: ConsumptionState = {} as any;
 
   for (const [populationKey, populationValue] of typesafeEntries(consumption)) {
-    console.log(typeof populationKey, population, population[populationKey]);
     const populationTotal = population[populationKey];
 
     for (const [itemKey, itemValue] of typesafeEntries(populationValue)) {
