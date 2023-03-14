@@ -1,49 +1,20 @@
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import {
-  Alert,
-  AlertColor,
-  Avatar,
-  Box,
-  Button,
-  Dialog,
-  DialogContent,
-  FormControl,
-  FormControlLabel,
-  Grid,
-  InputLabel,
-  MobileStepper,
-  Select,
-  Snackbar,
-  Stack,
-  Switch,
-  Tab,
-  TextField,
-} from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import { invoke } from "@tauri-apps/api";
-import React, { useEffect, useId, useMemo, useState } from "react";
-import { Building, buildings } from "./lib/buildings";
+import { Box, Dialog, DialogContent, Stack, Tab } from "@mui/material";
+import { useEffect, useId, useMemo, useState } from "react";
+import { useForm } from "./formContext";
+import { LayoutsView } from "./Layouts";
 import {
   calculateConsumption,
-  ConsumptionState,
   getEmptyPopulationState,
   PopulationState,
 } from "./lib/calculation";
 import { GameVersion, gameVersions } from "./lib/game-versions";
-import { Item, items } from "./lib/items";
-import { Layouts, readLayouts } from "./lib/layouts";
-import { population } from "./lib/population";
+import { Item } from "./lib/items";
 import { Process } from "./lib/process";
-import { production } from "./lib/production";
 import { typesafeEntries } from "./lib/util";
-
-type FormState = {
-  processList: Process[];
-  process?: Process;
-  gameVersionIndex?: number;
-  updateInterval?: number;
-};
+import { useNotification } from "./notificationContext";
+import { PopulationForm } from "./PopulationForm";
+import { ConsumptionView, PopulationView, ProductionView } from "./Views";
 
 async function readPopulation(process: Process, gameVersion: GameVersion) {
   const address = await process.traversePointerPath(gameVersion.pointerPath);
@@ -55,25 +26,9 @@ async function readPopulation(process: Process, gameVersion: GameVersion) {
   return result;
 }
 
-type AppState = { type: AlertColor; message: string };
-
-function App() {
-  // app state
-  const [hasMessageToShow, setHasMessageToShow] = useState(false);
-  const [message, setMessage] = useState<{ type: AlertColor; text: string }>();
-
-  function idle() {
-    setHasMessageToShow(false);
-    setMessage(undefined);
-  }
-
-  function showMessage(type: AlertColor, text: string) {
-    setMessage({ type, text });
-    setHasMessageToShow(true);
-  }
-
-  // form
-  const [formState, setFormState] = useState<FormState>({ processList: [] });
+export function App() {
+  const form = useForm();
+  const notification = useNotification();
 
   // modal
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
@@ -109,32 +64,32 @@ function App() {
 
   useEffect(() => {
     tryToClearInterval();
-    if (!formState.updateInterval) return;
+    if (!form.updateInterval) return;
     setAutoUpdateIntervalId(
-      setInterval(tryToReadPopulation, formState.updateInterval * 1000)
+      setInterval(tryToReadPopulation, form.updateInterval * 1000)
     );
     return tryToClearInterval;
-  }, [formState]);
+  }, [form]);
 
   // reading population
   async function tryToReadPopulation() {
-    if (!formState.process) {
-      showMessage("error", "No process selected");
+    if (!form.process) {
+      notification.show("error", "No process selected");
       return;
     }
-    if (formState.gameVersionIndex === undefined) {
-      showMessage("error", "No game version selected");
+    if (form.gameVersionIndex === undefined) {
+      notification.show("error", "No game version selected");
       return;
     }
 
     try {
       const population = await readPopulation(
-        formState.process,
-        gameVersions[formState.gameVersionIndex]
+        form.process,
+        gameVersions[form.gameVersionIndex]
       );
       setPopulation(population);
     } catch (error) {
-      showMessage("error", String(error));
+      notification.show("error", String(error));
     }
   }
 
@@ -150,13 +105,6 @@ function App() {
           )}
         </DialogContent>
       </Dialog>
-      <Snackbar open={hasMessageToShow} autoHideDuration={6000} onClose={idle}>
-        {message && (
-          <Alert onClose={idle} severity={message.type} sx={{ width: "100%" }}>
-            {message.text}
-          </Alert>
-        )}
-      </Snackbar>
       <TabContext value={tab}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <TabList variant="fullWidth" onChange={(_, v) => setTab(v)}>
@@ -173,11 +121,7 @@ function App() {
           />
         </TabPanel>
         <TabPanel value={settingsTab}>
-          <PopulationForm
-            onSubmit={setPopulation}
-            formState={formState}
-            setFormState={setFormState}
-          />
+          <PopulationForm onSubmit={setPopulation} />
         </TabPanel>
         <TabPanel
           value={layoutsTab}
@@ -189,385 +133,9 @@ function App() {
             minHeight: 0,
           }}
         >
-          <LayoutsView2 />
+          <LayoutsView />
         </TabPanel>
       </TabContext>
     </Stack>
   );
 }
-
-function LayoutsView2() {
-  const [layouts, setLayouts] = useState<Layouts>();
-  const [images, setImages] = useState<string[]>([]);
-
-  useMemo(() => {
-    readLayouts().then((result) => setLayouts(result));
-  }, []);
-
-  return (
-    <>
-      <Stack direction="row" gap="1rem" padding="1rem">
-        {layouts && (
-          <RecursiveSelect
-            label="Category"
-            layout={layouts}
-            onSelect={(value) => setImages(value)}
-          />
-        )}
-      </Stack>
-      <ImageGallery images={images} />
-    </>
-  );
-}
-
-function RecursiveSelect(props: {
-  label: string;
-  layout: Layouts;
-  onSelect: (value: string[]) => void;
-}) {
-  if (!props.layout) return null;
-
-  if (Object.values(props.layout)[0] instanceof Array) {
-    return (
-      <ExtendedSelect
-        label={props.label}
-        items={props.layout}
-        onSelect={(_, value) => props.onSelect(value as string[])}
-      />
-    );
-  } else {
-    return (
-      <ExtendedSelect
-        label={props.label}
-        items={props.layout as Exclude<Layouts, string[]>}
-      >
-        {(categoryName, _) => (
-          <RecursiveSelect
-            label={categoryName as string}
-            layout={props.layout[categoryName] as Layouts}
-            onSelect={props.onSelect}
-          />
-        )}
-      </ExtendedSelect>
-    );
-  }
-}
-
-function ExtendedSelect<T extends Record<string, unknown>>(props: {
-  label: string;
-  items: T;
-  children?: (item: keyof T, value: T[keyof T]) => React.ReactNode;
-  onSelect?: (item: keyof T, value: T[keyof T]) => void;
-}) {
-  const entries = useMemo(() => typesafeEntries(props.items), [props.items]);
-  const [value, setValue] = useState<keyof T>(entries[0][0]);
-  const labelId = useId();
-
-  useEffect(() => {
-    setValue(entries[0][0]);
-  }, [entries]);
-
-  useEffect(() => {
-    props.onSelect?.(value, props.items[value]);
-  }, [value]);
-
-  return (
-    <>
-      <FormControl sx={{ flexGrow: 1 }}>
-        <InputLabel id={labelId}>{props.label}</InputLabel>
-        <Select
-          labelId={labelId}
-          label={props.label}
-          value={value}
-          onChange={(e) => setValue(e.target.value as keyof T)}
-        >
-          {entries.map(([name, _]) => (
-            <MenuItem key={name} value={name}>
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      {props.children && props.children(value, props.items[value])}
-    </>
-  );
-}
-
-function ImageGallery(props: { images: string[] }) {
-  const [step, setStep] = useState(0);
-
-  useEffect(() => {
-    setStep(0);
-  }, [props.images]);
-
-  return (
-    <>
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="0"
-        flexGrow="1"
-      >
-        <img
-          src={props.images[step]}
-          alt="layout"
-          style={{
-            maxHeight: "100%",
-            maxWidth: "100%",
-            objectFit: "contain",
-          }}
-        />
-      </Box>
-      <MobileStepper
-        variant="dots"
-        steps={props.images.length}
-        sx={{
-          position: "unset",
-        }}
-        nextButton={
-          <Button
-            onClick={() => setStep((x) => x + 1)}
-            disabled={step === props.images.length - 1}
-          >
-            right
-            <KeyboardArrowRight />
-          </Button>
-        }
-        backButton={
-          <Button onClick={() => setStep((x) => x - 1)} disabled={step === 0}>
-            <KeyboardArrowLeft />
-            left
-          </Button>
-        }
-        activeStep={step}
-      />
-    </>
-  );
-}
-
-function ProductionView(props: {
-  consumptionState: ConsumptionState;
-  selectedItem: Item;
-}) {
-  const productionEntries = useMemo(() => {
-    const result = {} as Record<
-      Item,
-      Array<{
-        name: Building;
-        value: number;
-        image: string;
-      }>
-    >;
-
-    for (const [item, cons] of typesafeEntries(props.consumptionState)) {
-      result[item] = [];
-      for (const [building, amount] of typesafeEntries(production[item])) {
-        result[item].push({
-          name: building,
-          value: amount * cons,
-          image: buildings[building],
-        });
-      }
-    }
-
-    return result;
-  }, [props.consumptionState]);
-
-  return (
-    <Stack direction="column" gap="1rem">
-      <RowView data={productionEntries[props.selectedItem].slice(0, 4)} />
-      <RowView data={productionEntries[props.selectedItem].slice(4, 8)} />
-    </Stack>
-  );
-}
-
-function ConsumptionView(props: {
-  consumptionState: ConsumptionState;
-  onItemClick: (key: Item) => void;
-}) {
-  const consumptionEntries = useMemo(
-    () =>
-      typesafeEntries(props.consumptionState).map((x) => ({
-        name: x[0],
-        value: x[1],
-        image: items[x[0]],
-      })),
-    [props.consumptionState]
-  );
-
-  return (
-    <>
-      <RowView
-        data={consumptionEntries.slice(0, 7)}
-        onClick={props.onItemClick}
-      />
-      <RowView
-        data={consumptionEntries.slice(7, 14)}
-        onClick={props.onItemClick}
-      />
-      <RowView
-        data={consumptionEntries.slice(14, 21)}
-        onClick={props.onItemClick}
-      />
-    </>
-  );
-}
-
-function PopulationView(props: { populationState: PopulationState }) {
-  const populationEntries = useMemo(
-    () =>
-      typesafeEntries(props.populationState).map((x) => ({
-        name: x[0],
-        value: x[1],
-        image: population[x[0]],
-      })),
-    [props.populationState]
-  );
-
-  return <RowView data={populationEntries} />;
-}
-
-function RowView<T>(props: {
-  data: {
-    name: T;
-    value: number;
-    image: string;
-  }[];
-  onClick?: (key: T) => void;
-}) {
-  return (
-    <Stack direction="row" flexGrow="1">
-      {props.data.map((data, index) => (
-        <ItemView key={index} {...data} onClick={props.onClick} />
-      ))}
-    </Stack>
-  );
-}
-
-function ItemView<T>(props: {
-  name: T;
-  value: number;
-  image: string;
-  onClick?: (key: T) => void;
-}) {
-  return (
-    <Stack flexGrow="1" alignItems="center">
-      <Button
-        disabled={!props.onClick}
-        onClick={() => props.onClick?.(props.name)}
-        sx={{ padding: 0 }}
-      >
-        <Avatar src={props.image} />
-      </Button>
-      <span>{+props.value.toFixed(2)}</span>
-    </Stack>
-  );
-}
-
-function PopulationForm(props: {
-  formState: FormState;
-  setFormState: React.Dispatch<React.SetStateAction<FormState>>;
-  onSubmit?: (population: PopulationState) => void;
-}) {
-  async function scanForProcesses() {
-    const results = await Process.listProcesses();
-    const processList = results
-      .sort((a, b) => a.compare(b))
-      .filter((process, index, array) => {
-        if (index === 0) return true;
-        return process.name !== array[index - 1].name;
-      });
-    props.setFormState((old) => ({ ...old, processList }));
-  }
-
-  useEffect(() => {
-    scanForProcesses();
-  }, []);
-
-  async function toggleAlwaysOnTop(value: boolean) {
-    try {
-      await invoke("toggle_always_on_top", { alwaysOnTop: value });
-    } catch (error) {
-      // TODO: Handle error
-    }
-  }
-
-  const processLabelId = useId();
-  const gameVersionLabelId = useId();
-
-  return (
-    <div>
-      <Grid
-        display="flex"
-        flexDirection="column"
-        gap="1rem"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <FormControl fullWidth>
-          <InputLabel id={processLabelId}>Process</InputLabel>
-          <Select
-            onOpen={scanForProcesses}
-            labelId={processLabelId}
-            label="Process"
-            value={props.formState.process?.pid ?? ""}
-            onChange={(e) => {
-              const pid = Number(e.target.value);
-              const process = props.formState.processList.find(
-                (process) => process.pid === pid
-              );
-              if (process) props.setFormState((old) => ({ ...old, process }));
-            }}
-          >
-            {props.formState.processList.map((process) => (
-              <MenuItem key={process.pid} value={process.pid}>
-                {process.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth>
-          <InputLabel id={gameVersionLabelId}>Game Version</InputLabel>
-          <Select
-            labelId={gameVersionLabelId}
-            label="Game Version"
-            value={props.formState.gameVersionIndex ?? ""}
-            onChange={(e) => {
-              const gameVersionIndex = Number(e.target.value);
-              if (isNaN(gameVersionIndex)) return;
-              props.setFormState((old) => ({ ...old, gameVersionIndex }));
-            }}
-          >
-            {gameVersions.map((gameVersion, index) => (
-              <MenuItem key={index} value={index}>
-                {gameVersion.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth>
-          <TextField
-            type="number"
-            value={props.formState.updateInterval ?? ""}
-            onChange={(e) => {
-              const value = parseInt(e.target.value);
-              const updateInterval = isNaN(value) ? undefined : value;
-              props.setFormState((old) => ({ ...old, updateInterval }));
-            }}
-            inputProps={{ min: 0 }}
-            label="Update Interval (seconds)"
-          />
-        </FormControl>
-        <FormControlLabel
-          control={
-            <Switch onChange={(e) => toggleAlwaysOnTop(e.target.checked)} />
-          }
-          label="Always on top"
-        />
-      </Grid>
-    </div>
-  );
-}
-
-export default App;
