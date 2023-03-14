@@ -8,9 +8,9 @@ import {
 import MenuItem from "@mui/material/MenuItem";
 import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
-import { useForm } from "./formContext";
-import { ImageGallery } from "./ImageGallery";
-import { Layouts, readLayouts } from "./lib/layouts";
+import { useForm } from "../context/formContext";
+import { ImageGallery } from "../ImageGallery";
+import { Layouts, readLayouts } from "./readLayouts";
 
 export function LayoutsView() {
   const [layouts, setLayouts] = useState<Layouts>();

@@ -2,8 +2,8 @@ import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./App";
-import { FormProvider } from "./formContext";
-import { NotificationProvider } from "./notificationContext";
+import { FormProvider } from "./context/formContext";
+import { NotificationProvider } from "./context/notificationContext";
 
 const darkTheme = createTheme({
   palette: {

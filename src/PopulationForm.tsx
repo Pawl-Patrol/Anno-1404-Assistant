@@ -10,11 +10,11 @@ import {
 import MenuItem from "@mui/material/MenuItem";
 import { invoke } from "@tauri-apps/api";
 import { useEffect, useId } from "react";
-import { useForm } from "./formContext";
+import { useForm } from "./context/formContext";
+import { useNotification } from "./context/notificationContext";
 import { PopulationState } from "./lib/calculation";
 import { gameVersions } from "./lib/game-versions";
 import { Process } from "./lib/process";
-import { useNotification } from "./notificationContext";
 
 export function PopulationForm(props: {
   onSubmit?: (population: PopulationState) => void;

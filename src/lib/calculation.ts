@@ -1,6 +1,6 @@
+import { Item } from "./assets/items";
 import { consumption } from "./consumption";
-import { Item } from "./items";
-import { Population } from "./population";
+import { Population } from "./populationEnum";
 import { typesafeEntries } from "./util";
 
 export type PopulationState = Record<Population, number>;

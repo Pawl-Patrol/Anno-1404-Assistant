@@ -1,5 +1,5 @@
-import { Item } from "./items";
-import { Population } from "./population";
+import { Item } from "./assets/items";
+import { Population } from "./populationEnum";
 
 type ItemConsumption = {
   amount: number;

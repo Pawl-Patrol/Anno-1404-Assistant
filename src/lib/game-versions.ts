@@ -1,4 +1,4 @@
-import { Population } from "./population";
+import { Population } from "./populationEnum";
 
 export type PointerPath = [bigint, ...bigint[]];
 

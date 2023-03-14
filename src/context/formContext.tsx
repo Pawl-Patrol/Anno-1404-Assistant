@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import { Process } from "./lib/process";
+import { Process } from "../lib/process";
 
 type Form = {
   processList: Process[];

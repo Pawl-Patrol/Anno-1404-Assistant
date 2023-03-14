@@ -1,5 +1,5 @@
-import { Building } from "./buildings";
-import { Item } from "./items";
+import { Building } from "./assets/buildings";
+import { Item } from "./assets/items";
 
 export const production = {
   Fish: { fishingLodge: 1 },

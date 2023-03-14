@@ -1,20 +1,20 @@
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Box, Dialog, DialogContent, Stack, Tab } from "@mui/material";
 import { useEffect, useId, useMemo, useState } from "react";
-import { useForm } from "./formContext";
-import { LayoutsView } from "./Layouts";
+import { useForm } from "./context/formContext";
+import { useNotification } from "./context/notificationContext";
+import { LayoutsView } from "./layouts/Layouts";
+import { Item } from "./lib/assets/items";
 import {
   calculateConsumption,
   getEmptyPopulationState,
   PopulationState,
 } from "./lib/calculation";
 import { GameVersion, gameVersions } from "./lib/game-versions";
-import { Item } from "./lib/items";
 import { Process } from "./lib/process";
 import { typesafeEntries } from "./lib/util";
-import { useNotification } from "./notificationContext";
 import { PopulationForm } from "./PopulationForm";
-import { ConsumptionView, PopulationView, ProductionView } from "./Views";
+import { ConsumptionView, PopulationView, ProductionView } from "./views";
 
 async function readPopulation(process: Process, gameVersion: GameVersion) {
   const address = await process.traversePointerPath(gameVersion.pointerPath);

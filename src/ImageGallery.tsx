@@ -1,6 +1,6 @@
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { Box, Button, MobileStepper } from "@mui/material";
-import { useForm } from "./formContext";
+import { useForm } from "./context/formContext";
 
 export function ImageGallery(props: { images: string[] }) {
   const form = useForm();
