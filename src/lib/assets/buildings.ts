@@ -10,9 +10,11 @@ import saltMineUrl from "./icons/Brine.png";
 import silkWeavingMillUrl from "./icons/BrocadeRobes.png";
 import candlemakersWorkshopUrl from "./icons/Candles.png";
 import redsmithsWorkshopUrl from "./icons/Candlesticks.png";
+import cannonFoundryUrl from "./icons/Cannons.png";
 import carpetWorkshopUrl from "./icons/Carpets.png";
 import cattleFarmUrl from "./icons/Cattle.png";
 import ciderFarmUrl from "./icons/Cider.png";
+import clayPitUrl from "./icons/Clay.png";
 import charcoalBurnersHutUrl from "./icons/Coal.png";
 import roastingHouseUrl from "./icons/Coffee.png";
 import coffeePlantationUrl from "./icons/CoffeeBeans.png";
@@ -22,6 +24,7 @@ import fishingLodgeUrl from "./icons/Fish.png";
 import millUrl from "./icons/Flour.png";
 import furriersWorkshopUrl from "./icons/FurCoats.png";
 import trappersLodgeUrl from "./icons/Furs.png";
+import glassSmelterUrl from "./icons/Glass.png";
 import opticiansWorkshopUrl from "./icons/Glasses.png";
 import goldSmelterUrl from "./icons/Gold.png";
 import goldMineUrl from "./icons/GoldOre.png";
@@ -36,17 +39,23 @@ import weaversHutUrl from "./icons/LinenGarments.png";
 import confectionersWorkshopUrl from "./icons/Marzipan.png";
 import butcheryUrl from "./icons/Meat.png";
 import goatFarmUrl from "./icons/Milk.png";
+import mosaicWorkshopUrl from "./icons/Mosaic.png";
 import paperMillUrl from "./icons/Paper.png";
 import perfumeryUrl from "./icons/Parfum.png";
 import pearlWorkshopUrl from "./icons/PearlNecklaces.png";
 import pearlFishersHutUrl from "./icons/Pearls.png";
+import forestGlassworksUrl from "./icons/Potash.png";
 import quarzQuarryUrl from "./icons/Quartz.png";
+import ropeyardUrl from "./icons/Ropes.png";
 import roseNurseryUrl from "./icons/RoseOil.png";
 import saltWorksUrl from "./icons/Salt.png";
 import silkPlantationUrl from "./icons/Silk.png";
 import spiceFarmUrl from "./icons/Spices.png";
 import sugarMillUrl from "./icons/Sugar.png";
 import sugarCanePlantationUrl from "./icons/SugarCane.png";
+import toolmakersWorkshopUrl from "./icons/Tools.png";
+import warMachinesWorkshopUrl from "./icons/WarMachines.png";
+import weaponSmithyUrl from "./icons/Weapons.png";
 import cropFarmUrl from "./icons/Wheat.png";
 import winePressUrl from "./icons/Wine.png";
 import lumberjacksHutUrl from "./icons/Wood.png";
@@ -104,6 +113,15 @@ export const buildings = {
   almondPlantation: almondPlantationUrl,
   sugarMill: sugarMillUrl,
   sugarCanePlantation: sugarCanePlantationUrl,
+  ropeyard: ropeyardUrl,
+  toolmakersWorkshop: toolmakersWorkshopUrl,
+  mosaicWorkshop: mosaicWorkshopUrl,
+  clayPit: clayPitUrl,
+  glassSmelter: glassSmelterUrl,
+  forestGlassworks: forestGlassworksUrl,
+  weaponSmithy: weaponSmithyUrl,
+  cannonFoundry: cannonFoundryUrl,
+  warMachinesWorkshop: warMachinesWorkshopUrl,
 } satisfies Record<string, string>;
 
 export type Building = keyof typeof buildings;

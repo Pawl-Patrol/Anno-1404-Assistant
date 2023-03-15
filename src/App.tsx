@@ -1,10 +1,9 @@
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Box, Dialog, DialogContent, Stack, Tab } from "@mui/material";
-import { useEffect, useId, useMemo, useState } from "react";
-import { useForm } from "./context/formContext";
+import { Box, Stack, Tab } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+import { AppTab, useForm } from "./context/formContext";
 import { useNotification } from "./context/notificationContext";
 import { LayoutsView } from "./layouts/Layouts";
-import { Item } from "./lib/assets/items";
 import {
   calculateConsumption,
   getEmptyPopulationState,
@@ -14,7 +13,8 @@ import { GameVersion, gameVersions } from "./lib/game-versions";
 import { Process } from "./lib/process";
 import { typesafeEntries } from "./lib/util";
 import { PopulationForm } from "./PopulationForm";
-import { ConsumptionView, PopulationView, ProductionView } from "./views";
+import { ProductionChain } from "./ProductionChain";
+import { ConsumptionView, PopulationView } from "./views";
 
 async function readPopulation(process: Process, gameVersion: GameVersion) {
   const address = await process.traversePointerPath(gameVersion.pointerPath);
@@ -30,10 +30,6 @@ export function App() {
   const form = useForm();
   const notification = useNotification();
 
-  // modal
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
-  const closeModal = () => setSelectedItem(null);
-
   // population and consumption
   const [populationState, setPopulation] = useState<PopulationState>(
     getEmptyPopulationState()
@@ -43,15 +39,9 @@ export function App() {
     [populationState]
   );
 
-  // tabs
-  const statisticsTab = useId();
-  const settingsTab = useId();
-  const layoutsTab = useId();
-  const [tab, setTab] = useState(settingsTab);
-
   useEffect(() => {
-    if (tab === statisticsTab) tryToReadPopulation();
-  }, [tab]);
+    if (form.tab === AppTab.Population) tryToReadPopulation();
+  }, [form.tab]);
 
   // auto update
   const [autoUpdateIntervalId, setAutoUpdateIntervalId] = useState<ReturnType<
@@ -95,45 +85,48 @@ export function App() {
 
   return (
     <Stack direction="column" height="100vh">
-      <Dialog open={!!selectedItem} onClose={closeModal}>
-        <DialogContent>
-          {selectedItem && (
-            <ProductionView
-              consumptionState={consumption}
-              selectedItem={selectedItem}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
-      <TabContext value={tab}>
+      <TabContext value={form.tab}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <TabList variant="fullWidth" onChange={(_, v) => setTab(v)}>
-            <Tab label="Statistics" value={statisticsTab} />
-            <Tab label="Settings" value={settingsTab} />
-            <Tab label="Layouts" value={layoutsTab} />
+          <TabList
+            variant="fullWidth"
+            onChange={(_, tab) => form.merge({ tab })}
+          >
+            <Tab label="Statistics" value={AppTab.Population} />
+            <Tab label="Production chains" value={AppTab.Production} />
+            <Tab label="Layouts" value={AppTab.Layouts} />
+            <Tab label="Settings" value={AppTab.Settings} />
           </TabList>
         </Box>
-        <TabPanel value={statisticsTab}>
+        <TabPanel value={AppTab.Population}>
           <PopulationView populationState={populationState} />
           <ConsumptionView
             consumptionState={consumption}
-            onItemClick={setSelectedItem}
+            onItemClick={(selectedItem) => {
+              form.merge({
+                selectedItem,
+                selectedItemQuantity: consumption[selectedItem],
+                tab: AppTab.Production,
+              });
+            }}
           />
         </TabPanel>
-        <TabPanel value={settingsTab}>
-          <PopulationForm onSubmit={setPopulation} />
+        <TabPanel value={AppTab.Production}>
+          <ProductionChain />
         </TabPanel>
         <TabPanel
-          value={layoutsTab}
+          value={AppTab.Layouts}
           sx={{
             display: "flex",
             flexDirection: "column",
-            flex: 1,
+            height: form.tab === AppTab.Layouts ? "100%" : 0,
             padding: 0,
             minHeight: 0,
           }}
         >
           <LayoutsView />
+        </TabPanel>
+        <TabPanel value={AppTab.Settings}>
+          <PopulationForm />
         </TabPanel>
       </TabContext>
     </Stack>

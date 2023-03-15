@@ -12,13 +12,10 @@ import { invoke } from "@tauri-apps/api";
 import { useEffect, useId } from "react";
 import { useForm } from "./context/formContext";
 import { useNotification } from "./context/notificationContext";
-import { PopulationState } from "./lib/calculation";
 import { gameVersions } from "./lib/game-versions";
 import { Process } from "./lib/process";
 
-export function PopulationForm(props: {
-  onSubmit?: (population: PopulationState) => void;
-}) {
+export function PopulationForm() {
   const form = useForm();
   const notification = useNotification();
 

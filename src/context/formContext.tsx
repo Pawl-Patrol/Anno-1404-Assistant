@@ -1,5 +1,13 @@
 import React, { PropsWithChildren } from "react";
+import { Item } from "../lib/assets/items";
 import { Process } from "../lib/process";
+
+export enum AppTab {
+  Population = "Population",
+  Settings = "Settings",
+  Layouts = "Layouts",
+  Production = "Production",
+}
 
 type Form = {
   processList: Process[];
@@ -9,11 +17,15 @@ type Form = {
   updateInterval?: number;
   layoutPath: string[];
   imageIndex?: number;
+  tab: AppTab;
+  selectedItem?: Item;
+  selectedItemQuantity?: number;
 };
 
 const defaultFormState: Form = {
   processList: [],
   layoutPath: [],
+  tab: AppTab.Settings,
 };
 
 function createFormState(

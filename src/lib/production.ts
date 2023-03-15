@@ -74,4 +74,41 @@ export const production = {
     sugarMill: 1,
     sugarCanePlantation: 2,
   },
+  Ropes: { ropeyard: 1, hempPlantation: 1 },
+  Brass: { copperSmelter: 1, copperMine: 1, charcoalBurnersHut: 0.67 },
+  Tools: {
+    toolmakersWorkshop: 2,
+    ironSmelter: 1,
+    ironMine: 1,
+    charcoalBurnersHut: 1,
+  },
+  Mosaic: {
+    mosaicWorkshop: 1,
+    clayPit: 2,
+    quarzQuarry: 0.9,
+  },
+  Glass: {
+    glassSmelter: 2,
+    quarzQuarry: 0.75,
+    forestGlassworks: 1,
+  },
+  Weapons: {
+    weaponSmithy: 1,
+    ironSmelter: 1,
+    ironMine: 1,
+    charcoalBurnersHut: 1,
+  },
+  Cannons: {
+    cannonFoundry: 1,
+    ironSmelter: 0.75,
+    ironMine: 0.75,
+    charcoalBurnersHut: 0.75,
+    lumberjacksHut: 2,
+  },
+  WarMachines: {
+    warMachinesWorkshop: 1,
+    ropeyard: 1.5,
+    hempPlantation: 1.5,
+    lumberjacksHut: 2,
+  },
 } satisfies Record<Item, Partial<Record<Building, number>>>;
