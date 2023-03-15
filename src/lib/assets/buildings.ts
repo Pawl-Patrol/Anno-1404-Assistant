@@ -51,6 +51,7 @@ import roseNurseryUrl from "./icons/RoseOil.png";
 import saltWorksUrl from "./icons/Salt.png";
 import silkPlantationUrl from "./icons/Silk.png";
 import spiceFarmUrl from "./icons/Spices.png";
+import stoneMasonsHutUrl from "./icons/Stone.png";
 import sugarMillUrl from "./icons/Sugar.png";
 import sugarCanePlantationUrl from "./icons/SugarCane.png";
 import toolmakersWorkshopUrl from "./icons/Tools.png";
@@ -122,6 +123,7 @@ export const buildings = {
   weaponSmithy: weaponSmithyUrl,
   cannonFoundry: cannonFoundryUrl,
   warMachinesWorkshop: warMachinesWorkshopUrl,
+  stoneMasonsHut: stoneMasonsHutUrl,
 } satisfies Record<string, string>;
 
 export type Building = keyof typeof buildings;

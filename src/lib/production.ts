@@ -4,11 +4,11 @@ import { Item } from "./assets/items";
 export const production = {
   Fish: { fishingLodge: 1 },
   Cider: { ciderFarm: 1 },
-  LinenGarments: { weaversHut: 1, hempPlantation: 2 },
+  "Linen Garments": { weaversHut: 1, hempPlantation: 2 },
   Spices: { spiceFarm: 1 },
   Bread: { bakery: 1, mill: 1, cropFarm: 2 },
   Beer: { monasteryBrewery: 1, cropFarm: 1, monasteryGarden: 1 },
-  LeatherJerkins: {
+  "Leather Jerkins": {
     tannery: 1,
     pigFarm: 2,
     saltWorks: 0.5,
@@ -48,14 +48,14 @@ export const production = {
     copperMine: 0.75,
     charcoalBurnersHut: 0.5,
   },
-  FurCoats: {
+  "Fur Coats": {
     furriersWorkshop: 1,
     trappersLodge: 1,
     saltWorks: 19 / 60,
     saltMine: 19 / 60,
     charcoalBurnersHut: 19 / 60,
   },
-  BrocadeRobes: {
+  "Brocade Robes": {
     silkWeavingMill: 1,
     silkPlantation: 2,
     goldSmelter: 1,
@@ -66,7 +66,7 @@ export const production = {
   Milk: { goatFarm: 1 },
   Carpets: { carpetWorkshop: 1, silkPlantation: 1, indigoFarm: 1 },
   Coffee: { roastingHouse: 1, coffeePlantation: 2 },
-  PearlNecklaces: { pearlWorkshop: 1, pearlFishersHut: 1 },
+  "Pearl Necklaces": { pearlWorkshop: 1, pearlFishersHut: 1 },
   Parfum: { perfumery: 1, roseNursery: 3 },
   Marzipan: {
     confectionersWorkshop: 1,
@@ -105,10 +105,14 @@ export const production = {
     charcoalBurnersHut: 0.75,
     lumberjacksHut: 2,
   },
-  WarMachines: {
+  "War Machines": {
     warMachinesWorkshop: 1,
     ropeyard: 1.5,
     hempPlantation: 1.5,
     lumberjacksHut: 2,
   },
+  Salt: { saltWorks: 1, saltMine: 1 },
+  Iron: { ironSmelter: 1, ironMine: 1, charcoalBurnersHut: 1 },
+  Wood: { lumberjacksHut: 1 },
+  Stone: { stoneMasonsHut: 1 },
 } satisfies Record<Item, Partial<Record<Building, number>>>;

@@ -18,7 +18,7 @@ export const consumption = {
   [Population.Citizens]: {
     Fish: { amount: 500, depends: 1 },
     Cider: { amount: 340, depends: 1 },
-    LinenGarments: { amount: 476, depends: 1 },
+    "Linen Garments": { amount: 476, depends: 1 },
     Spices: { amount: 500, depends: 1 },
   },
   [Population.Patricians]: {
@@ -27,8 +27,8 @@ export const consumption = {
     Bread: { amount: 727, depends: 1 },
     Cider: { amount: 652, depends: 1 },
     Beer: { amount: 625, depends: 510 },
-    LinenGarments: { amount: 1052, depends: 1 },
-    LeatherJerkins: { amount: 1428, depends: 690 },
+    "Linen Garments": { amount: 1052, depends: 1 },
+    "Leather Jerkins": { amount: 1428, depends: 690 },
     Books: { amount: 1875, depends: 940 },
     Candlesticks: { amount: 2500, depends: 0 }, // handles separately
   },
@@ -40,11 +40,11 @@ export const consumption = {
     Cider: { amount: 1153, depends: 1 },
     Beer: { amount: 1071, depends: 1 },
     Wine: { amount: 1000, depends: 1500 },
-    LinenGarments: { amount: 2500, depends: 1 },
-    LeatherJerkins: { amount: 2500, depends: 1 },
+    "Linen Garments": { amount: 2500, depends: 1 },
+    "Leather Jerkins": { amount: 2500, depends: 1 },
     Glasses: { amount: 1709, depends: 2200 },
-    FurCoats: { amount: 1562, depends: 950 },
-    BrocadeRobes: { amount: 2112, depends: 4000 },
+    "Fur Coats": { amount: 1562, depends: 950 },
+    "Brocade Robes": { amount: 2112, depends: 4000 },
     Books: { amount: 3333, depends: 1 },
     Candlesticks: { amount: 3333, depends: 3000 },
   },
@@ -58,8 +58,8 @@ export const consumption = {
     Milk: { amount: 666, depends: 1 },
     Carpets: { amount: 1500, depends: 1 },
     Coffee: { amount: 1000, depends: 1 },
-    PearlNecklaces: { amount: 751, depends: 1040 },
+    "Pearl Necklaces": { amount: 751, depends: 1040 },
     Parfum: { amount: 1250, depends: 2600 },
     Marzipan: { amount: 2453, depends: 4360 },
   },
-} as Record<Population, Partial<Record<Item, ItemConsumption>>>;
+} satisfies Record<Population, Partial<Record<Item, ItemConsumption>>>;
