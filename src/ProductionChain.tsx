@@ -10,7 +10,7 @@ import { chain, isNil } from "lodash";
 import { useId, useMemo } from "react";
 import { useForm } from "./context/formContext";
 import { buildings } from "./lib/assets/buildings";
-import { Item } from "./lib/assets/items";
+import { Item, items } from "./lib/assets/items";
 import { production } from "./lib/production";
 import { typesafeEntries } from "./lib/util";
 import { IconRow } from "./views/common";
@@ -18,7 +18,7 @@ import { IconRow } from "./views/common";
 export function ProductionChain() {
   const form = useForm();
 
-  const items = useMemo(() => {
+  const productionBuildings = useMemo(() => {
     if (!form.selectedItem) return [];
     if (isNil(form.selectedItemQuantity)) return [];
 
@@ -55,7 +55,14 @@ export function ProductionChain() {
           >
             {orderedProductionItems.map((item) => (
               <MenuItem key={item} value={item}>
-                {item}
+                <Stack direction="row" gap="0.5rem" alignItems="center">
+                  <img
+                    src={items[item as Item]}
+                    alt={item}
+                    style={{ width: "1.5rem", height: "1.5rem" }}
+                  />
+                  {item}
+                </Stack>
               </MenuItem>
             ))}
           </Select>
@@ -69,13 +76,13 @@ export function ProductionChain() {
               const selectedItemQuantity = isNaN(value) ? undefined : value;
               form.merge({ selectedItemQuantity });
             }}
-            inputProps={{ min: 0, step: 0.1 }}
+            inputProps={{ min: 0 }}
             label="Quantity"
           />
         </FormControl>
       </Stack>
       <Stack direction="column" gap="1rem">
-        <IconRow data={items} />
+        <IconRow data={productionBuildings} />
       </Stack>
     </Stack>
   );
