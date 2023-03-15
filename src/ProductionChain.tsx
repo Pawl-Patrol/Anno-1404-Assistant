@@ -26,9 +26,10 @@ export function ProductionChain() {
     for (const [building, amount] of typesafeEntries(
       production[form.selectedItem]
     )) {
+      const value = amount * form.selectedItemQuantity;
       result.push({
         name: building,
-        value: amount * form.selectedItemQuantity,
+        value: +value.toFixed(2),
         image: buildings[building],
       });
     }

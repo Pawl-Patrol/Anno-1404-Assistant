@@ -1,5 +1,6 @@
+import { Refresh } from "@mui/icons-material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Box, Stack, Tab } from "@mui/material";
+import { Box, Fab, Stack, Tab } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { AppTab, useForm } from "./context/formContext";
 import { useNotification } from "./context/notificationContext";
@@ -109,6 +110,18 @@ export function App() {
               });
             }}
           />
+          <Fab
+            onClick={tryToReadPopulation}
+            sx={{
+              position: "absolute",
+              bottom: 0,
+              right: 0,
+              margin: "1rem",
+            }}
+            color="primary"
+          >
+            <Refresh />
+          </Fab>
         </TabPanel>
         <TabPanel value={AppTab.Production}>
           <ProductionChain />

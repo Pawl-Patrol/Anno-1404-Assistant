@@ -15,7 +15,7 @@ function IconCard<T>(props: {
       >
         <Avatar src={props.image} />
       </Button>
-      <span>{+props.value.toFixed(2)}</span>
+      <span>{props.value}</span>
     </Stack>
   );
 }

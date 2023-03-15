@@ -36,5 +36,9 @@ export function calculateConsumption(population: PopulationState) {
     result["Candlesticks"] = 0;
   }
 
+  for (const [itemKey, itemValue] of typesafeEntries(result)) {
+    result[itemKey] = +itemValue.toFixed(2);
+  }
+
   return result;
 }
