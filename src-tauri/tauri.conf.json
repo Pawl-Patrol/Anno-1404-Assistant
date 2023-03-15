@@ -22,18 +22,14 @@
       },
       "fs": {
         "all": true,
-        "scope": [
-          "$RESOURCE/**/*"
-        ]
+        "scope": ["$RESOURCE/**/*"]
       },
       "protocol": {
         "asset": true,
-        "assetScope": [
-          "$RESOURCE/**/*"
-        ]
+        "assetScope": ["$RESOURCE/**/*"]
       }
     },
-  
+
     "bundle": {
       "resources": ["data/*"],
       "active": true,
@@ -58,7 +54,7 @@
         "resizable": true,
         "title": "Anno 1404 Calculator",
         "minWidth": 500,
-        "minHeight": 355
+        "minHeight": 400
       }
     ]
   }
