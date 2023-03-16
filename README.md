@@ -9,7 +9,7 @@ It's especially hard to re-enter the population every time into an online calcul
 
 # How does it work?
 
-The rust backend uses the windows api to [https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory](ReadProcessMemory) from the game to obtain the population data.
+The rust backend uses the windows api to [ReadProcessMemory](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory) from the game to obtain the population data.
 This data is sent to the react frontend which displays it.
 
 It uses a static pointer and pointer offsets to obtain the address of the population in the game.
@@ -27,7 +27,7 @@ If you happen to have friends, go ahead and find addresses for multiplayer.
 
 ## Requirements
 
-- [https://cheatengine.org/](Cheat Engine)
+- [Cheat Engine](https://cheatengine.org/)
 - A savegame including:
   - multiple islands (why? Reduces the amount of addresses found)
   - beggers (why? beggers seem to be the civilization stage with the lowest index)
