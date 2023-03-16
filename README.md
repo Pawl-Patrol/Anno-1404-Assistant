@@ -9,11 +9,11 @@ It's especially hard to re-enter the population every time into an online calcul
 
 # How does it work?
 
-The rust backend uses the windows api to `ReadProcessMemory()` from the game to obtain the population data.
+The rust backend uses the windows api to [https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory](ReadProcessMemory) from the game to obtain the population data.
 This data is sent to the react frontend which displays it.
 
-It uses a static pointer to obtain the address of the population in the game.
-These pointers can differ in different game versions.
+It uses a static pointer and pointer offsets to obtain the address of the population in the game.
+These pointers can be different in different game versions.
 Check out the other section on how to find these pointers.
 
 # What about multiplayer?
