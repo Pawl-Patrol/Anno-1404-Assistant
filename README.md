@@ -1,6 +1,6 @@
 # Anno 1404 Helper
 
-A tool which reads your population and calculates its consumption. Build with Tauri.
+Anno 1404 population reader, consumption calculator, production chain viewer and layout viewer built with Tauri + React + MUI
 
 # Why?
 
