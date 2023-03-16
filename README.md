@@ -20,7 +20,7 @@ Check out the other section on how to find these pointers.
 
 Populations are stored differently in multiplayer.
 But I found out that it kinda works but only for the first player.
-Yes, this also means that you can the population of other players.
+Yes, this also means that you can see the population of other players.
 If you happen to have friends, go ahead and find addresses for multiplayer.
 
 # Finding a pointer path for your game version
