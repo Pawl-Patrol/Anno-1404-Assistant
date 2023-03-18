@@ -88,9 +88,9 @@ export const production = {
     quarzQuarry: 0.9,
   },
   Glass: {
-    glassSmelter: 2,
-    quarzQuarry: 0.75,
-    forestGlassworks: 1,
+    glassSmelter: 1,
+    quarzQuarry: 0.375,
+    forestGlassworks: 0.5,
   },
   Weapons: {
     weaponSmithy: 1,
