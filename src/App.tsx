@@ -19,7 +19,7 @@ import { ConsumptionView, PopulationView } from "./views";
 
 async function readPopulation(process: Process, gameVersion: GameVersion) {
   const address = await process.traversePointerPath(gameVersion.pointerPath);
-  const result: PopulationState = {} as any;
+  const result = {} as PopulationState;
   for (const [name, offset] of typesafeEntries(gameVersion.populationOffsets)) {
     const value = await process.readInteger(address + offset, 4);
     result[name] = Number(value);
