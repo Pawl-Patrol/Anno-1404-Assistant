@@ -27,6 +27,12 @@ fn take_snapshot(mode: CREATE_TOOLHELP_SNAPSHOT_FLAGS, pid: u32) -> Result<HANDL
     Err(result.unwrap_err().to_string())
 }
 
+/**
+ * apparently js's BigInts are not supported by serde so we have to
+ * split them into two 32-bit values. This is because
+ * u64::MAX (rust) > Number.MAX_SAFE_INTEGER (js)
+ * These 32-bit values are then reconstructed to a js BigInt
+ */
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Process {
     name: String,
