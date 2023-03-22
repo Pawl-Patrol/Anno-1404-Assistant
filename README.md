@@ -7,6 +7,14 @@ Anno 1404 population reader, consumption calculator, production chain viewer and
 For large worlds it's hard to keep track of consumption.
 It's especially hard to re-enter the population every time into an online calculator.
 
+# Images
+
+![test](assets/Screenshot%202023-03-22%20181008.png)
+![test](assets/Screenshot%202023-03-22%20181202.png)
+![test](assets/Screenshot%202023-03-22%20181155.png)
+![test](assets/Screenshot%202023-03-22%20181056.png)
+![test](assets/Screenshot%202023-03-22%20181126.png)
+
 # How does it work?
 
 The rust backend uses the windows api to [ReadProcessMemory](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory) from the game to obtain the population data.
